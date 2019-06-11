@@ -38,7 +38,9 @@ df_wide = as.data.frame(cbind(ID, do.call(cbind, dfs)))
 head(df_wide)
 
 # Then we add columns to the df based on functions of specified columns
-# make summary measures for L based on matrix for the network
+# make summary measures for L based on matrix for the network.  For simplicity here, 
+# we will use same fcn for L as for A
+
 f_L0 = function(M) {
   c(median(M[,1]), mean(M[,2]))
 }
@@ -58,8 +60,6 @@ summary_maker = function(data, cols, fcn) {
  return(D[,-1])
 }
 
-L0_summary = summary_maker(df_wide, 2:3, f_L0)
-head(L0_summary,20)
 
 # specify cols and fcn for L and A summaries for each time point
 L_summary_info = list(list(data = df_wide, cols = 2:3, fcn = f_L0),
