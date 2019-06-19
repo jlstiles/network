@@ -12,9 +12,10 @@ X = model.matrix(formula('fakeoutcome.2015~ oofratiocen.2015*outoflaborcen.2015 
                            pmale.2001 + wmpage0_19.2001 + wmpage65p.2001 +ratioage0_19.2001 + 
                            ratioage65.2001-1'), data = data_fake)
 
-# stick the state variable in front and order by state to match the ddply output
-X = cbind(data_fake$state.2001, X)
-colnames(X)[1] = "state.2001"
+# stick the state variable in front and order by state to match the ddply output. Will also
+# keep  the country ID variable in there
+X = as.data.frame(cbind(data_fake$state.2001, data_fake$fips2, X))
+colnames(X)[1:2] = c("state.2001", "county")
 X = X[order(X$state.2001),]
 
 # This is a function that just does column means of input df
@@ -32,13 +33,16 @@ summary_maker = function(data, cols, fcn, ID) {
     df_new = as.data.frame(do.call(rbind, meas))
     return(df_new)
   })
-  return(D)
+  return(D[,-1])
 }
 
 # perform colmeans summaries for all variables and name accordingly
-summaries = summary_maker(X, 2:30, f_mean, "state.2001")
-colnames(summaries)[2:30]  = paste0(colnames(summaries)[2:30], "_mean") 
+summaries = summary_maker(X, 3:31, f_mean, "state.2001")
+head(summaries)
+colnames(summaries) = paste0(colnames(summaries), "_mean") 
 
-# bind it all together
+# bind it all together. This data frame contains all variables, summaries ordered
+# by the state variable and also contains county number.  
 X_full = cbind(X, summaries[,-1])
 head(X_full)
+
