@@ -46,9 +46,9 @@ f_L0 = function(M) {
 }
 
 summary_maker = function(data, cols, fcn) {
-  data = df_wide
-  cols = 2:3
-  fcn = f_L0
+  # data = df_wide
+  # cols = 2:3
+  # fcn = f_L0
  D=ddply(data, "ID", .fun = function(df) {
    meas = lapply(1:nrow(df), FUN = function(x) {
     temp = df[-x,cols]
@@ -92,7 +92,7 @@ dfs_per_time = lapply(0:2, FUN = function(t) {
   
 })
 
-head(dfs_per_time[[1]])
+head(dfs_per_time[[2]])
 
 # crunch it all together in wide form to then be sequentially regressed
 df_new = cbind(ID, do.call(cbind, dfs_per_time), Y=df_wide$Y)
